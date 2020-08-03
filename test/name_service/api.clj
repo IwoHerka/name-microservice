@@ -1,8 +1,20 @@
-(ns name-service.service-test
+(ns name-service.api
   (:require [clojure.test :refer :all]
             [io.pedestal.test :refer :all]
             [io.pedestal.http :as bootstrap]
-            [name-service.service :as service]))
+            [mount.core :as mount]
+            [name-service.delivery.service :as service]))
+
+(use-fixtures
+  :each
+  (fn
+    [f]
+    (mount/stop)
+    (mount/start)
+    ; TODO: Write TestStorage for testing purposes.
+    ;(mount/start-with
+    ;  {#'name-service.delivery.state/store (->TestStorage (atom {}))})
+    (f)))
 
 (def service
   (::bootstrap/service-fn (bootstrap/create-servlet service/service)))

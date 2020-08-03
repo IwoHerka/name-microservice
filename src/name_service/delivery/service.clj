@@ -1,14 +1,13 @@
-(ns name-service.service
+(ns name-service.delivery.service
   (:require [io.pedestal.http :as http]
             [io.pedestal.http.body-params :as body-params]
-            [ring.util.response :as ring-resp]))
-
-(defn home-page
-  [request]
-  (ring-resp/response "Hello World!"))
+            [name-service.delivery.use-case :as uc]))
 
 (def routes `{"/" {:interceptors [(body-params/body-params) http/html-body]
-                   :get home-page}})
+                   :get uc/get-binding
+                   :post uc/post-binding
+                   :patch uc/patch-binding
+                   :delete uc/delete-binding}})
 
 ;; Consumed by name-service.server/create-server
 ;; See http/default-interceptors for additional options you can configure
