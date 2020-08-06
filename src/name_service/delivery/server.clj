@@ -4,8 +4,9 @@
             [io.pedestal.http.route :as route]
             [mount.core :as mount]
             [name-service.delivery.service :as service]
-            [name-service.delivery.utils :refer [inject-interceptors]]))
-
+            [name-service.delivery.utils :refer [inject-interceptors]]
+            [name-service.delivery.service :as service]
+            [mount.core]))
 ;; This is an adapted service map, that can be started and stopped
 ;; From the REPL you can call server/start and server/stop on this service
 (defonce runnable-service (server/create-server service/service))

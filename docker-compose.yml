@@ -1,0 +1,28 @@
+version: '3.6'
+services:
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+    expose:
+      - "27017"
+
+  lein:
+    image: clojure:lein
+    working_dir: "/name-service"
+    volumes:
+      - "maven-cache:/root/.m2"
+      - ".:/name-service"
+    environment:
+      LEIN_REPL_HOST: "0.0.0.0"
+      LEIN_REPL_PORT: 6662
+    expose:
+      - "6662"
+    ports:
+      - "6662:6662"
+      - "8080:8080"
+    command: [ "lein", "repl", ":headless" ]
+
+volumes:
+  maven-cache:
+
