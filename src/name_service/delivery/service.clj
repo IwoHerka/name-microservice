@@ -1,13 +1,11 @@
 (ns name-service.delivery.service
   (:require [io.pedestal.http :as http]
-            [io.pedestal.http.body-params :as body-params]
             [name-service.delivery.use-case :as uc]))
 
-(def routes `{"/" {:interceptors [(body-params/body-params) http/html-body]
-                   :get uc/get-binding
-                   :post uc/post-binding
-                   :patch uc/patch-binding
-                   :delete uc/delete-binding}})
+(def routes #{["/" :get    uc/get-binding     :route-name :get-binding]
+              ["/" :post   uc/post-binding    :route-name :post-binding]
+              ["/" :patch  uc/patch-binding   :route-name :patch-binding]
+              ["/" :delete uc/delete-binding  :route-name :delete-binding]})
 
 ;; Consumed by name-service.server/create-server
 ;; See http/default-interceptors for additional options you can configure

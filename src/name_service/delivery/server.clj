@@ -3,7 +3,8 @@
   (:require [io.pedestal.http :as server]
             [io.pedestal.http.route :as route]
             [mount.core :as mount]
-            [name-service.delivery.service :as service]))
+            [name-service.delivery.service :as service]
+            [name-service.delivery.utils :refer [inject-interceptors]]))
 
 ;; This is an adapted service map, that can be started and stopped
 ;; From the REPL you can call server/start and server/stop on this service
@@ -26,7 +27,7 @@
               ;; Content Security Policy (CSP) is mostly turned off in dev mode
               ::server/secure-headers {:content-security-policy-settings {:object-src "'none'"}}})
       ;; Wire up interceptor chains
-      server/default-interceptors
+      inject-interceptors
       server/dev-interceptors
       server/create-server
       server/start))
