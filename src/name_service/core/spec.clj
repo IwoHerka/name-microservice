@@ -6,7 +6,7 @@
 (s/def ::val string?)
 (s/def ::keymap (s/map-of ::key ::val))
 
-(s/def ::storage #(satisfies? entity/KeyBindingStorage %))
+(s/def ::storage #(satisfies? entity/KeyMapStorage %))
 (s/def ::storage-error keyword?)
 (s/def ::storage-result (s/or :data (s/or :val ::val :vals (s/* ::val))
                               :error ::storage-error))

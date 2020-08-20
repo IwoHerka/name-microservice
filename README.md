@@ -31,3 +31,7 @@ To learn more about configuring Logback, read its [documentation](http://logback
 2. Build an uberjar of your service: `lein uberjar`
 3. Build a Docker image: `sudo docker build -t name-service .`
 4. Run your Docker image: `docker run -p 8080:8080 name-service`
+
+## Documentation
+
+See [docs](docs) directory.

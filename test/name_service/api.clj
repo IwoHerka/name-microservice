@@ -21,15 +21,15 @@
 
 (deftest home-page-test
   (is (=
-       (:body (response-for service :get "/"))
-       "Hello World!"))
+        (:body (response-for service :get "/"))
+        "Hello World!"))
   (is (=
-       (:headers (response-for service :get "/"))
-       {"Content-Type" "text/html;charset=UTF-8"
-        "Strict-Transport-Security" "max-age=31536000; includeSubdomains"
-        "X-Frame-Options" "DENY"
-        "X-Content-Type-Options" "nosniff"
-        "X-XSS-Protection" "1; mode=block"
-        "X-Download-Options" "noopen"
-        "X-Permitted-Cross-Domain-Policies" "none"
-        "Content-Security-Policy" "object-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'strict-dynamic' https: http:;"})))
+        (:headers (response-for service :get "/"))
+        {"Content-Type" "text/html;charset=UTF-8"
+         "Strict-Transport-Security" "max-age=31536000; includeSubdomains"
+         "X-Frame-Options" "DENY"
+         "X-Content-Type-Options" "nosniff"
+         "X-XSS-Protection" "1; mode=block"
+         "X-Download-Options" "noopen"
+         "X-Permitted-Cross-Domain-Policies" "none"
+         "Content-Security-Policy" "object-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'strict-dynamic' https: http:;"})))

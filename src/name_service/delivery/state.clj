@@ -7,6 +7,8 @@
 
 (defstate store              :start (make-storage))
 (defstate add-key-binding    :start (uc/add-key-binding    {:storage store}))
+(defstate append-key-binding :start (uc/append-key-binding {:storage store}))
 (defstate update-key-binding :start (uc/update-key-binding {:storage store}))
+(defstate delete-keymap      :start (uc/delete-keymap      {:storage store}))
 (defstate delete-key-binding :start (uc/delete-key-binding {:storage store}))
 (defstate get-key            :start (uc/get-key            {:storage store}))
