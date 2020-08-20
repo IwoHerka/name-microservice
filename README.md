@@ -1,6 +1,19 @@
 # name-service
 
-FIXME
+This application is a name service, which allows to assign a map of unique user IDs 
+on different services to each other. An example keymap is as follows:
+```
+"slack" -> "john.doe"
+"jira" -> "johndoe@gmail.com"
+```
+The microservice allows to:
+* Adding new keymap
+* Appending existing keymap
+* Updating existing keymap
+* Deleting (from) existing keymap
+* Querying key-bindings 
+
+See explained definitions and more detailed descriptions of use cases [here](USE_CASES.md). 
 
 ## Getting Started
 
