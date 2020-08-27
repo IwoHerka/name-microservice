@@ -44,3 +44,10 @@
       (nil? error)
       {:status 200
        :body   (merge-with-payload->json {:error nil :type type-name} payload)})))
+
+(defn keymap->arguments
+  [keymap]
+  (->> keymap
+    (clojure.walk/stringify-keys)
+    (mapcat identity)
+    (vec)))

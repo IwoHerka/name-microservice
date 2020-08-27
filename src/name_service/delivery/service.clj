@@ -6,7 +6,7 @@
 
 (def common-interceptors [(body-params/body-params) http/html-body])
 
-(def routes #{["/" :get (conj common-interceptors `uc/get-binding)]
+(def routes #{["/:key" :get (conj common-interceptors `uc/get-binding)]
               ["/" :post (conj common-interceptors `uc/post-binding)]
               ["/" :patch (conj common-interceptors `uc/patch-binding)]
               ["/" :delete (conj common-interceptors `uc/delete-binding)]})
