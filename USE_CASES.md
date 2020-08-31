@@ -1,7 +1,8 @@
 ## 0. Rationale
 
-Mikroserwis powinien mieć możliwość przypisania mapowania unikatowych ID userów w różnych serwisach do siebie. Jego klienci zadawaliby pytanie w stylu:
-– podaj proszę identyfikator w serwisie B, jeśli mam w serwisie A identyfikator I i dostawali odpowiedni output.
+The microservice should be able to assign map of unique user IDs on different 
+services to each other. Users would make quries like "Give me an ID from service B 
+if I have an ID equal to I in service A" and receive the appropriate output.
 
 ## 1. Entity model
 
