@@ -1,13 +1,11 @@
 (ns name-service.delivery.service
   (:require [io.pedestal.http :as http]
-            [io.pedestal.http.body-params :as body-params]
             [name-service.delivery.use-case :as uc]))
 
-(def routes `{"/" {:interceptors [(body-params/body-params) http/html-body]
-                   :get uc/get-binding
-                   :post uc/post-binding
-                   :patch uc/patch-binding
-                   :delete uc/delete-binding}})
+(def routes #{["/:key" :get    uc/get-binding     :route-name :get-binding]
+              ["/"     :post   uc/post-binding    :route-name :post-binding]
+              ["/"     :patch  uc/patch-binding   :route-name :patch-binding]
+              ["/"     :delete uc/delete-binding  :route-name :delete-binding]})
 
 ;; Consumed by name-service.server/create-server
 ;; See http/default-interceptors for additional options you can configure
@@ -46,13 +44,13 @@
    ::http/port 8080
    ;; Options to pass to the container (Jetty)
    ::http/container-options
-    {:h2c? true
-     :h2? false
-     ;:keystore "test/hp/keystore.jks"
-     ;:key-password "password"
-     ;:ssl-port 8443
-     :ssl? false
-     ;; Alternatively, You can specify you're own Jetty HTTPConfiguration
-     ;; via the `:io.pedestal.http.jetty/http-configuration` container option.
-     ;:io.pedestal.http.jetty/http-configuration (org.eclipse.jetty.server.HttpConfiguration.)
-}})
+   {:h2c? true
+    :h2? false
+    ;:keystore "test/hp/keystore.jks"
+    ;:key-password "password"
+    ;:ssl-port 8443
+    :ssl? false
+    ;; Alternatively, You can specify you're own Jetty HTTPConfiguration
+    ;; via the `:io.pedestal.http.jetty/http-configuration` container option.
+    ;:io.pedestal.http.jetty/http-configuration (org.eclipse.jetty.server.HttpConfiguration.)
+    }})

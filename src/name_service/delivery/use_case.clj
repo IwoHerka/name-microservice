@@ -1,11 +1,17 @@
 (ns name-service.delivery.use-case
-  (:require [ring.util.response :as ring-resp]))
+  (:require  [name-service.delivery.append :as append]
+             [name-service.delivery.delete :as delete]
+             [name-service.delivery.update :as update]
+             [name-service.delivery.querying :as querying]))
 
-(defn post-binding [request])
+(defn post-binding [request]
+  (append/dispatch request))
 
 (defn get-binding [request]
-  (ring-resp/response "Hello World!"))
+  (querying/dispatch request))
 
-(defn patch-binding [request])
+(defn patch-binding [request]
+  (update/dispatch request))
 
-(defn delete-binding [request])
+(defn delete-binding [request]
+  (delete/dispatch request))
