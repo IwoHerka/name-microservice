@@ -94,3 +94,87 @@
                                     :headers headers
                                     :body (json/encode {:update {:git "new-name2@gmail.com"}
                                                         :where {:slack "name1@gmail.com"}}))))))
+
+(deftest test-add-keymap-returns-200
+  (is (= 200 (:status (response-for service
+                        :post (url-for :post-binding)
+                        :headers headers
+                        :body (json/encode {:where {:x "a"}}))))))
+
+(deftest test-add-keymap-returns-400-when-to-many-where
+  (is (= 400 (:status (response-for service
+                        :post (url-for :post-binding)
+                        :headers headers
+                        :body (json/encode {:where {:x "a"
+                                                    :z "c"}})))))
+  (is (= 400 (:status (response-for service
+                        :post (url-for :post-binding)
+                        :headers headers
+                        :body (json/encode {:append {:x "a"}
+                                            :where  {:y "b"
+                                                     :z "c"}}))))))
+
+(deftest test-append-keymap-returns-200
+  (testing "Add value A for key X, where key Y has value B.")
+  (is (= 200 (:status (response-for service
+                        :post (url-for :post-binding)
+                        :headers headers
+                        :body (json/encode {:append {:x "a"}
+                                            :where  {:y "b"}}))))))
+
+(deftest test-append-keymap-returns-400-when-value-in-params-are-wrong
+  (is (= 400 (:status (response-for service
+                        :post (url-for :post-binding)
+                        :headers headers
+                        :body (json/encode {:append {:x 1}
+                                            :where  {:y 2}})))))
+
+  (is (= 400 (:status (response-for service
+                        :post (url-for :post-binding)
+                        :headers headers
+                        :body (json/encode {:append {:x "a"}
+                                            :where  {:y 2}})))))
+
+  (is (= 400 (:status (response-for service
+                        :post (url-for :post-binding)
+                        :headers headers
+                        :body (json/encode {:append {:x 1}
+                                            :where  {:y "c"}}))))))
+
+(deftest test-append-keymap-returns-400-when-no-where-params
+  (is (= 400 (:status (response-for service
+                        :post (url-for :post-binding)
+                        :headers headers
+                        :body (json/encode {:append {:x "a"}})))))
+
+  (is (= 400 (:status (response-for service
+                        :post (url-for :post-binding)
+                        :headers headers
+                        :body (json/encode {:append {:x 1}}))))))
+
+(deftest test-quering-key-bindings-returns-200
+  (testing "Get value of key X where key Y has value A")
+  (is (= 200 (:status (response-for service
+                        :get (url-for :get-binding
+                               :path-params  {:key "x"}
+                               :query-params {:y "a"}))))))
+
+(deftest test-quering-key-bindings-returns-400-when-to-many-query-params
+  (is (= 400 (:status (response-for service
+                        :get (url-for
+                               :get-binding
+                               :path-params  {:key "x"}
+                               :query-params {:y "a"
+                                              :z "c"}))))))
+
+(deftest test-quering-key-bindings-returns-400-when-no-query-params
+  (is (= 400 (:status (response-for service
+                        :get (url-for
+                               :get-binding
+                               :path-params {:key "x"}))))))
+
+(deftest test-quering-key-bindings-returns-404-no-path-params
+  (is (= 404 (:status (response-for service
+                        :get (url-for
+                               :get-binding
+                               :query-params {:y "a"}))))))
