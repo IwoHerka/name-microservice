@@ -2,9 +2,10 @@
   (:require [clojure.spec.alpha :as s]
             [name-service.core.entity :as entity]))
 
-(s/def ::key string?)
-(s/def ::val string?)
-(s/def ::keymap (s/map-of ::key ::val))
+(s/def ::key (s/and string? not-empty))
+(s/def ::val (s/and string? not-empty))
+(s/def ::keymap (s/and (s/map-of ::key ::val) not-empty))
+(s/def ::many-keymap (s/and (s/coll-of ::keymap) not-empty))
 
 (s/def ::storage #(satisfies? entity/KeyMapStorage %))
 (s/def ::storage-error keyword?)
