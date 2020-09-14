@@ -8,8 +8,15 @@ on:
 
 jobs:
   build:
+    container:
+      image: clojure
 
     runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo
+        ports:
+          - 27017:27017
 
     steps:
     - uses: actions/checkout@v2
