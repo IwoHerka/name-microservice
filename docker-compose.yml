@@ -1,11 +1,13 @@
 version: '3.6'
+
+networks:
+  planning-bot:
+
 services:
   mongodb:
     image: mongo
-    ports:
-      - "27017:27017"
-    expose:
-      - "27017"
+    networks:
+      planning-bot:
 
   lein:
     image: clojure:lein
@@ -22,6 +24,10 @@ services:
       - "6662:6662"
       - "8080:8080"
     command: [ "lein", "repl", ":headless" ]
+    depends_on:
+      - mongodb
+    networks:
+      planning-bot:
 
 volumes:
   maven-cache:
