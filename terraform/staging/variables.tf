@@ -1,3 +1,7 @@
+variable "project_name" {
+  default = "planning-bot"
+}
+
 variable "aws_region" {
   default = "eu-west-1"
 }
