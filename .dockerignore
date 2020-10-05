@@ -1,0 +1,8 @@
+docker/
+terraform/
+.git/
+.github/
+target/
+.gitignore
+.dockerignore
+logs/
