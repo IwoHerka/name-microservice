@@ -33,6 +33,13 @@ variable "db_port" {
   default = 27017
 }
 
-variable "task_execution_role_arn" {
-  default = "arn:aws:iam::198488405862:role/kopytko-ecs-task-execution"
+variable "task_execution_role_name" {
+  default = "kopytko-ecs-task-execution"
+}
+
+variable "common_tags" {
+  default = {
+    Environment: "Staging",
+    Project: "PlanningBot",
+  }
 }
