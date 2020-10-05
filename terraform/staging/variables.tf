@@ -39,7 +39,7 @@ variable "task_execution_role_name" {
 
 variable "common_tags" {
   default = {
-    Environment: "Staging",
-    Project: "PlanningBot",
+    Environment : "Staging",
+    Project : "PlanningBot",
   }
 }
