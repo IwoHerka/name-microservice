@@ -1,10 +1,10 @@
-(ns name-service.delivery.delete
+(ns name-service.delivery.server.delete
   (:require [cheshire.core :as json]
             [clojure.spec.alpha :as s]
-            [name-service.delivery.http :as http]
-            [name-service.delivery.spec :as spec]
-            [name-service.delivery.state :as state]
-            [name-service.delivery.utils :as utils]))
+            [name-service.delivery.server.http :as http]
+            [name-service.delivery.server.spec :as spec]
+            [name-service.delivery.server.utils :as utils]
+            [name-service.delivery.state :as state]))
 
 (defn- delete-keymap [where-kv]
   (let [key (utils/first-key-to-str where-kv)
@@ -18,7 +18,7 @@
         (state/delete-key-binding key value)
         (utils/action->response))))
 
-; if json-params contain delete, given key is going to be deleted
+; If json-params contain delete, given key is going to be deleted
 ; otherwise whole keymap is going to be deleted
 (defn- delete-key-binding [json-params]
   (if-let [key (:delete json-params)]

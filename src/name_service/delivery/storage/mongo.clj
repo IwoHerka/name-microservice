@@ -1,7 +1,6 @@
-(ns name-service.storage.mongo
+(ns name-service.delivery.storage.mongo
   (:require [clojure.spec.alpha :as s]
             [clojure.walk :as w]
-            [environ.core :refer [env]]
             [monger.collection :as mc]
             [monger.core :as mg]
             [name-service.core.entity :as entity]
@@ -16,21 +15,28 @@
 (defn- save
   [{:keys [db coll-name] :as storage} keymap key val]
   (if (s/valid? ::cs/keymap keymap)
-    (-> (if (empty? (fetch storage key val))
-          (mc/insert-and-return db coll-name keymap)
-          (mc/find-and-modify db
-                              coll-name
-                              {key val}
-                              keymap
-                              {:return-new true}))
-        (dissoc  :_id)
-        w/stringify-keys)
-    :not-valid))
+    (if (and key val)
+      (-> (if (empty? (fetch storage key val))
+            (mc/insert-and-return db coll-name keymap)
+            (mc/find-and-modify db
+                                coll-name
+                                {key val}
+                                keymap
+                                {:return-new true}))
+          (dissoc :_id)
+          w/stringify-keys)
+      (->
+        (mc/insert-and-return db coll-name keymap)
+        (dissoc :_id)
+        w/stringify-keys))
+      :not-valid))
 
 (defn- delete
   [{:keys [db coll-name]} key val]
   (if (and (s/valid? ::cs/key key) (s/valid? ::cs/val val))
-    (mc/remove db coll-name {key val})
+    ; Return true if number of affected documents (getN)
+    ; is larger then 0. Otherwise call is invalid.
+    (< 0 (.getN (mc/remove db coll-name {key val})))
     :not-valid))
 
 (defrecord MongoStorage [db]

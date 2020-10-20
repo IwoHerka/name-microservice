@@ -1,14 +1,13 @@
-(ns name-service.delivery.spec
+(ns name-service.delivery.server.spec
   (:require [clojure.spec.alpha :as s]))
 
-;For now, delete is supported only for one key.
-;(s/def ::delete (s/coll-of string? :distinct true :count 1))
+; For now, delete is supported only for one key.
+; (s/def ::delete (s/coll-of string? :distinct true :count 1))
 (s/def ::delete string?)
 
-;For now, we can only update one keymap at a time.
-;In the future we can change from :count to :min-count.
-(s/def ::update
-  (s/map-of keyword? string? :count 1))
+; For now, we can only update one keymap at a time.
+; In the future we can change from :count to :min-count.
+(s/def ::update (s/map-of keyword? string? :count 1))
 
 (s/def ::append
   (s/map-of keyword? string? :count 1))

@@ -1,69 +1,74 @@
 (ns name-service.core.use-case
-  (:require [name-service.core.entity :as entity]
-            [name-service.core.action :as action]))
+  "Core logic use-cases. Represents business logic of the application."
+  (:require [com.walmartlabs.cond-let :refer [cond-let]]
+            [name-service.core.action :as a]
+            [name-service.core.entity :as e]))
+
+(declare result->action)
+
+(defn add-key-binding [storage key val]
+  "Add value A for key X."
+  (result->action ::e/add (e/save storage {key val} nil nil)))
+
+(defn append-key-binding [storage key-a val-a key-b val-b]
+  "Add a value A for key X, where key Y has value B."
+  (cond-let
+    :let [keymap (e/fetch storage key-b val-b)]
+
+    (e/storage-error? keymap)
+    (a/make-error ::e/append keymap)
+
+    (contains? keymap key-a)
+    (a/make-error ::e/append :key-exists)
+
+    :let [result (e/save storage (assoc keymap key-a val-a) key-b val-b)]
+    :else (result->action ::e/append result)))
+
+(defn update-key-binding [storage key-a val-a key-b val-b]
+  "Update key X to value A where key Y has value B or
+  Update key X to value A where key X has value B."
+  (cond-let
+    :let [keymap (e/fetch storage key-b val-b)]
+
+    (e/storage-error? keymap)
+    (a/make-error ::e/update keymap)
+
+    (contains? keymap key-a)
+    (let [result (e/save storage (assoc keymap key-a val-a) key-b val-b)]
+      (result->action ::e/update result))
+
+    :else (a/make-error ::e/update :key-does-not-exist)))
+
+(defn delete-key-binding [storage key-a key-b val-b]
+  "Delete value for key X where key Y has value A."
+  (cond-let
+    :let [keymap (e/fetch storage key-b val-b)]
+
+    (e/storage-error? keymap)
+    (a/make-error ::e/delete-key-binding keymap)
+
+    (contains? keymap key-a)
+    (result->action
+      ::e/delete-key-binding
+      (e/save storage (dissoc keymap key-a) key-b val-b))
+
+    :else (a/make-error ::e/delete-key-binding :key-does-not-exist)))
+
+(defn delete-keymap [storage key val]
+  "Delete keymap where key X has value A."
+  (result->action ::e/delete-keymap (e/delete storage key val)))
+
+(defn get-key [storage key-a key-b val-b]
+  "Get value of key-a, where key-b has value val-b."
+  (let [keymap (e/fetch storage key-b val-b)]
+    (if (e/storage-error? keymap)
+      (a/make-error ::e/get keymap)
+      (result->action ::e/get (get keymap key-a)))))
 
 (defn- result->action
+  "Convert result of a storage action to action object."
   [type result]
   (let [payload {:result result}]
-    (if (entity/storage-error? result)
-      (action/make-error type :storage payload)
-      (action/make-action type payload))))
-
-(defn add-key-binding [{:keys [storage]}]
-  "Add value A for key X."
-  (fn [key val]
-    (let [keymap {key val}]
-      (result->action :entity/add
-        (entity/save storage keymap nil nil)))))
-
-(defn append-key-binding [{:keys [storage]}]
-  "Add a value A for key X, where key Y has value B."
-  (fn [key-a val-a key-b val-b]
-    (let [keymap (entity/fetch storage key-b val-b)]
-      (if (entity/storage-error? keymap)
-        (action/make-error :entity/append keymap)
-        (if (contains? keymap key-a)
-          (action/make-error :entity/append :key-exists)
-          (result->action :entity/append
-            (entity/save storage
-              (assoc keymap key-a val-a) key-b val-b)))))))
-
-(defn update-key-binding [{:keys [storage]}]
-  "Update key X to value A where key Y has value B or
-  Update key X to value A where key X has value B"
-  (fn [key-a val-a key-b val-b]
-    (let [keymap (entity/fetch storage key-b val-b)]
-      (if (entity/storage-error? keymap)
-        (action/make-error :entity/update keymap)
-        (if (contains? keymap key-a)
-          (result->action :entity/update
-            (entity/save storage
-              (assoc keymap key-a val-a) key-b val-b))
-          (action/make-error :entity/update :key-does-not-exist))))))
-
-(defn delete-key-binding [{:keys [storage]}]
-  "Delete value for key X where key Y has value A"
-  (fn [key-a key-b val-b]
-    (let [keymap (entity/fetch storage key-b val-b)]
-      (if (entity/storage-error? keymap)
-        (action/make-error :entity/delete-key-binding keymap)
-        (if (contains? keymap key-a)
-          (result->action :entity/delete-key-binding
-            (entity/save storage
-              (dissoc keymap key-a) key-b val-b))
-          (action/make-error :entity/delete-key-binding :key-does-not-exist))))))
-
-(defn delete-keymap [{:keys [storage]}]
-  "Delete keymap where key X has value A"
-  (fn [key val]
-    (result->action :entity/delete-keymap
-      (entity/delete storage key val))))
-
-(defn get-key [{:keys [storage]}]
-  "Get value of key-a, where key-b has value val-b"
-  (fn [key-a key-b val-b]
-    (let [keymap (entity/fetch storage key-b val-b)]
-      (if (entity/storage-error? keymap)
-        (action/make-error :entity/get keymap)
-        (result->action :entity/get
-          (get keymap key-a))))))
+    (if (e/storage-error? result)
+      (a/make-error type :storage payload)
+      (a/make-action type payload))))
