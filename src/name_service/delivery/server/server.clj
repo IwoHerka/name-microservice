@@ -5,7 +5,7 @@
   (:require [io.pedestal.http :as server]
             [io.pedestal.http.route :as route]
             [mount.core :as mount]
-            [name-service.delivery.storage.utils :refer [->TestStorage]]
+            [name-service.delivery.storage.memory :refer [make-storage]]
             [name-service.delivery.server.service :as service]
             [name-service.delivery.server.utils :refer [inject-interceptors]]))
 
@@ -18,7 +18,7 @@
   (println "\nCreating your [DEV] server...")
   (if mock-storage?
     (mount/start-with
-      {#'name-service.delivery.state/store (->TestStorage (atom #{}))})
+      {#'name-service.delivery.state/store (make-storage)})
     (mount/start))
   (-> service/service ; start with production configuration
       (merge {:env :dev
