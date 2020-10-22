@@ -1,14 +1,18 @@
 # mongoDB
 
-Microservice is using [Clojure Monger](http://clojuremongodb.info/) to connect with MongoDB.
+Microservice is using [Clojure Monger](http://clojuremongodb.info/) to
+connect with MongoDB.
 
 ## Usage
 
 ##### make-storage
-To connect, use `make-storage` with `host port db-name coll-name` arguments.
-All arguments should be a string value.
 
-`(make-storage {:host "127.0.0.1", :port "27017", :db-name "db-name", :coll-name "coll-name"})`
+To connect, use `make-storage` with `coll-name` and `uri` arguments.
+All arguments should be strings:
+
+```
+(make-storage "mongodb://mongodb:27017/dev?authSource=admin" "dev")
+```
 
 ##### fetch
 To find, use `fetch` with `storeage key val` arguments.

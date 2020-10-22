@@ -1,10 +1,10 @@
-(ns name-service.delivery.update
+(ns name-service.delivery.server.update
   (:require [cheshire.core :as json]
             [clojure.spec.alpha :as s]
-            [name-service.delivery.http :as http]
-            [name-service.delivery.spec :as spec]
-            [name-service.delivery.state :as state]
-            [name-service.delivery.utils :as utils]))
+            [name-service.delivery.server.http :as http]
+            [name-service.delivery.server.spec :as spec]
+            [name-service.delivery.server.utils :as utils]
+            [name-service.delivery.state :as state]))
 
 (defn- update-key-binding [json-params]
   (let [kv-a (:update json-params)

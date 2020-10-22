@@ -1,4 +1,5 @@
-(ns name-service.utils
+(ns name-service.delivery.storage.utils
+  "Storage dev/test utilities."
   (:require [name-service.core.entity :as entity]))
 
 (defn- fetch
@@ -12,13 +13,14 @@
 
 (defn- save
   [db keymap key val]
-  (let [old-keymap (fetch db key val)]
-    (if (> (count old-keymap) 0)
-      (delete db key val)))
+  (if (and key val)
+    (let [old-keymap (fetch db key val)]
+      (if (> (count old-keymap) 0)
+        (delete db key val))))
   (swap! db conj keymap)
   keymap)
 
-; This storage expects (and works only with) atoms with value of a set
+; This storage expects (and works only with) atoms with value of a set.
 (defrecord TestStorage [db]
   entity/KeyMapStorage
   (-fetch [_ key val] (fetch db key val))

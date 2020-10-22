@@ -1,4 +1,5 @@
-(ns name-service.core.entity)
+(ns name-service.core.entity
+  "Core logic entities")
 
 (defprotocol KeyMapStorage
   (-fetch [this key val] "Fetch key map")

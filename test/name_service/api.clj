@@ -1,22 +1,25 @@
 (ns name-service.api
-  (:require [cheshire.core :as json]
-            [clojure.test :refer :all]
+  "Pedestal API tests."
+  (:require [clojure.test :refer :all]
+            [name-service.delivery.state :as uc]
+            [name-service.delivery.server.service :as service]
+            [name-service.delivery.server.utils :refer [inject-interceptors]]
+            [name-service.delivery.storage.utils :as utils]
+            [name-service.delivery.state :refer [store]]
             [io.pedestal.http :as bootstrap]
             [io.pedestal.http.route :as route]
             [io.pedestal.test :refer :all]
+            [cheshire.core :as json]
             [mount.core :as mount]
-            [name-service.delivery.service :as service]
-            [name-service.delivery.state :as uc]
-            [name-service.delivery.utils :refer [inject-interceptors]]
-            [name-service.utils :as utils]))
+            [monger.collection :as mc]))
 
-(use-fixtures :each
-              (fn
-                [f]
-                (mount/stop)
-                (mount/start-with
-                  {#'name-service.delivery.state/store (utils/->TestStorage (atom #{}))})
-                (f)))
+(use-fixtures
+  :each
+  (fn [f]
+    (mount/stop)
+    (mount/start-with
+      {#'name-service.delivery.state/store (utils/->TestStorage (atom #{}))})
+    (f)))
 
 (def url-for
   (route/url-for-routes (route/expand-routes service/routes)))
@@ -25,7 +28,6 @@
   (::bootstrap/service-fn (-> service/service
                               inject-interceptors
                               bootstrap/create-servlet)))
-
 
 (def headers {"Content-Type" "application/json"})
 
