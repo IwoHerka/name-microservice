@@ -8,7 +8,7 @@
 (defn- get-key [{:keys [path-params query-params]}]
   (let [params (merge path-params query-params)]
     (->> params
-      (utils/keymap->arguments)
+      (utils/json->keymap)
       (drop 1)
       (apply state/get-key)
       (utils/action->response))))

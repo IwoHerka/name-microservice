@@ -6,17 +6,18 @@
             [name-service.delivery.state :as state]))
 
 (defn- append-key [json-params]
-  (let [where-keymap (get json-params :where)]
-    (if-let [append-keymap (get json-params :append)]
-      (->> where-keymap
-        (merge append-keymap)
-        (utils/keymap->arguments)
-        (apply state/append-key-binding)
-        (utils/action->response))
-      (->> where-keymap
-        (utils/keymap->arguments)
-        (apply state/add-key-binding)
-        (utils/action->response)))))
+  (if-let [append-keymap (:append json-params)]
+    (->> json-params
+         :where ; Get the "where" dict.
+         (merge append-keymap)
+         utils/json->keymap
+         (apply state/append-key-binding)
+         utils/action->response)
+    (->> json-params
+         :where
+         utils/json->keymap
+         (apply state/add-key-binding)
+         utils/action->response)))
 
 (defn dispatch [{:keys [json-params]}]
   (if (s/valid? ::spec/post-request json-params)

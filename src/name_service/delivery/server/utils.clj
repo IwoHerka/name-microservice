@@ -38,8 +38,9 @@
     (nil? error)
     (http/ok (merge-with-payload->json {:error nil} payload))))
 
-(defn keymap->arguments [keymap]
-  (->> keymap
-    (clojure.walk/stringify-keys)
-    (mapcat identity)
-    (vec)))
+(defn json->keymap [keymap]
+  "Convert JSON representation of a keymap to internal reresentation."
+  (-> keymap
+      clojure.walk/stringify-keys
+      vec
+      flatten))
