@@ -20,8 +20,8 @@
   (swap! db conj keymap)
   keymap)
 
-"Atom-based in-memory storage.
-This storage expects (and works only with) atoms with value of a set."
+; Atom-based in-memory storage.
+; This storage expects (and works only with) atoms with value of a set.
 (defrecord MemoryStorage [db]
   entity/KeyMapStorage
   (-fetch [_ key val] (fetch db key val))
