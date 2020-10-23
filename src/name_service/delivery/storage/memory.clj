@@ -1,4 +1,4 @@
-(ns name-service.delivery.storage.utils
+(ns name-service.delivery.storage.memory
   "Storage dev/test utilities."
   (:require [name-service.core.entity :as entity]))
 
@@ -20,9 +20,13 @@
   (swap! db conj keymap)
   keymap)
 
+; Atom-based in-memory storage.
 ; This storage expects (and works only with) atoms with value of a set.
-(defrecord TestStorage [db]
+(defrecord MemoryStorage [db]
   entity/KeyMapStorage
   (-fetch [_ key val] (fetch db key val))
   (-save [_ keymap key val] (save db keymap key val))
   (-delete [_ key val] (delete db key val)))
+
+(defn make-storage []
+  (->MemoryStorage (atom #{})))

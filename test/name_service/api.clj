@@ -4,7 +4,7 @@
             [name-service.delivery.state :as uc]
             [name-service.delivery.server.service :as service]
             [name-service.delivery.server.utils :refer [inject-interceptors]]
-            [name-service.delivery.storage.utils :as utils]
+            [name-service.delivery.storage.memory :as mem]
             [name-service.delivery.state :refer [store]]
             [io.pedestal.http :as bootstrap]
             [io.pedestal.http.route :as route]
@@ -18,7 +18,7 @@
   (fn [f]
     (mount/stop)
     (mount/start-with
-      {#'name-service.delivery.state/store (utils/->TestStorage (atom #{}))})
+      {#'name-service.delivery.state/store (mem/make-storage)})
     (f)))
 
 (def url-for

@@ -2,7 +2,7 @@
   "Core use-cases' tests."
   (:require [clojure.test :refer :all]
             [clojure.spec.test.alpha :as stest]
-            [name-service.delivery.storage.utils :as utils]
+            [name-service.delivery.storage.memory :as mem]
             [name-service.delivery.state :as s]
             [name-service.core.use-case :as uc]
             [name-service.core.entity :as e]
@@ -23,7 +23,7 @@
   (fn [f]
     (mount/stop)
     (mount/start-with
-      {#'name-service.delivery.state/store (utils/->TestStorage (atom #{}))})
+      {#'name-service.delivery.state/store (mem/make-storage)})
     (f)))
 
 (deftest test-add-key-binding
