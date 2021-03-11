@@ -24,6 +24,10 @@ See explained definitions and more detailed descriptions of use cases [here](USE
 4. Run your app's tests with `lein test`. Read the tests at test/name_service/service_test.clj.
 5. Learn more! See the [Links section below](#links).
 
+## Architecture
+
+This project uses Clean Architecture:
+https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
 
 ## Configuration
 
